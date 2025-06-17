@@ -1,8 +1,10 @@
+from importlib.resources import read_text
 from flask import Flask, render_template, request
 import pickle
 from news_checker import check_news_on_internet
 
-app = Flask(__name__)
+app = Flask(__name__, )
+           
 
 model = pickle.load(open("model.pkl", "rb"))
 vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
@@ -41,3 +43,9 @@ if __name__ == "__main__":
     import os
     debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
     app.run(debug=debug_mode)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
+try:
+    api_result = check_news_on_internet(read_text, API_KEY)
+except Exception as e:
+    api_result = {"error": str(e)}
